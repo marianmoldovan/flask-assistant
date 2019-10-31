@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 from typing import Dict, Any
+import requests
 import os
 import sys
 import logging
@@ -48,5 +49,7 @@ def get_assistant(filename):
 
 
 def decode_token(token, client_id):
-    decoded = jwt.decode(token, certs=GOOGLE_PUBLIC_KEY, verify=True, audience=client_id)
+    resp = requests.get('https://www.googleapis.com/oauth2/v1/certs')
+    public_keys = resp.json()
+    decoded = jwt.decode(token, certs=public_keys, verify=True, audience=client_id)
     return decoded
